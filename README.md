@@ -116,8 +116,13 @@ jsantos,José,Santos,Molina
 ---
 ## Comandos a ejecutar en PowerShell
 ```powershell
+$server = Connect-DbaInstance `
+    -SqlInstance "nombreServidor" `
+    -Database "BDOriginal" `
+    -TrustServerCertificate
+
 Import-DbaCsv `
-    -SqlInstance nombreServidor `
+    -SqlInstance $server `
     -Database BDOriginal `
     -Table dbo.usuarios `
     -Path "C:...\usuarios.csv"
