@@ -4,16 +4,23 @@ Datos obtenidos durante el desarrollo de la **Fase I**.
 
 ## Resultados de ejecución correcta
 
+Comandos utilizados
+
 ```powershell
 PS C:\Users> $server = Connect-DbaInstance `
 >>     -SqlInstance "nomServer" `
 >>     -Database "BDOriginal" `
 >>     -TrustServerCertificate
+
+
 PS C:\Users\UsuarioGA> Import-DbaCsv `
 >>     -SqlInstance $server `
 >>     -Database "BDOriginal" `
 >>     -Table "dbo.usuarios" `
 >>     -Path "C:\...\usuarios.csv"
+>>     -Delimiter "," `
+>>     -Encoding UTF8 `
+>>     -EnableException
 
 ComputerName  : DESKTOP-2N2DH5F
 InstanceName  : SQLSERVER
@@ -29,7 +36,7 @@ Path          : "C:\...\usuarios.csv"
 
 ## Errores provocados
 
-Se elimina la coma de uno de los registros
+### 1. Se elimina la coma de uno de los registros
 
 ```csv
 Cuenta,Nombre,PrimerApellido,SegundoApellido
@@ -55,6 +62,64 @@ PS C:\Users> Import-DbaCsv `
 >>     -Database "BDOriginal" `
 >>     -Table "dbo.usuarios" `
 >>     -Path "C:\...\usuarios.csv"
+>>     -Delimiter "," `
+>>     -Encoding UTF8 `
+>>     -EnableException
 WARNING: [16:36:30][Import-DbaCsv] Failure | CSV parse error
 ```
+
+### 2. Se eliminan los datos de la última columna "Segundo Apellido", junto con el nombre de esta en el encabezado.
+
+El resultado fue:
+- Se insertaron los datos y para la columna faltante se agrego null, ya que esta columna permitia nulos.
+
+```powershell
+ComputerName  : DESKTOP-2N2DH5F
+InstanceName  : SQLSERVER
+SqlInstance   : DESKTOP-2N2DH5F\SQLSERVER
+Database      : BDOriginal
+Table         : usuarios
+Schema        : dbo
+RowsCopied    : 10
+Elapsed       : 196,09 ms
+RowsPerSecond : 51,3
+Path          : D:\..\usuariosSinColumna.csv
+```
+
+<img width="460" height="267" alt="image" src="https://github.com/user-attachments/assets/0b381d74-7f0e-44df-b0b4-64690a511c67" />
+
+### 3. Se validan los datos del CSV antes de migrarlos a la BD
+Para ello se utilizo un archivo de tipo .ps1 (esto por la cantidad de comandos a usar, suele ser la mejor opción)
+
+```powershell
+try{
+Import-DbaCsv `
+    -SqlInstance $server `
+    -Database "BDOriginal" `
+    -Schema "dbo" `
+    -Table "usuarios" `
+    -Path $csvPath `
+    -Delimiter "," `
+    -Encoding UTF8 `
+    -QuoteMode Strict `
+    -MismatchedFieldAction ThrowException `
+    -DuplicateHeaderBehavior ThrowException `
+    -ParseErrorAction ThrowException `
+    -EnableException
+Write-Host "Migración completada correctamente." -ForegroundColor Green
+}
+catch {
+    throw "Migración cancelada. El CSV contiene una fila inválida: $($_.Exception.Message)"
+}
+```
+
+Parámetros del módulo dbatools utilizados para validar:
+- MismatchedFieldAction ThrowException: cancela cuando una fila tiene más o menos campos.
+- QuoteMode Strict: exige que las comillas cumplan el formato CSV.
+- DuplicateHeaderBehavior ThrowException: rechaza encabezados duplicados.
+- ParseErrorAction ThrowException: cancela al encontrar una fila mal formada.
+- EnableException: permite capturar excepciones con tu propio bloque try/catch.
+
+Import-DbaCsv usa una transacción de forma predeterminada; si ocurre un error, revierte la importación completa. Pagina del módulo https://dbatools.io/Import-DbaCsv/
+
 
