@@ -1,0 +1,5 @@
+Codigo,Nombre,Valido
+PERFIL_ADMIN,Administrador,1
+PERFIL_VENTAS,Ventas,1
+PERFIL_REPORTES,Reportes,1
+PERFIL_INVALIDO,Perfil inválido,0

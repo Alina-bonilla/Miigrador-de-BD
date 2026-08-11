@@ -1,8 +1,8 @@
-IF DB_ID('BDOriginal') IS NULL
-    CREATE DATABASE BDOriginal;
+IF DB_ID('BDFinal') IS NULL
+    CREATE DATABASE BDFinal;
 GO
 
-USE BDOriginal;
+USE BDFinal;
 GO
 
 IF OBJECT_ID('dbo.usuarios', 'U') IS NULL
@@ -17,9 +17,10 @@ GO
 
 IF OBJECT_ID('dbo.Perfil', 'U') IS NULL
     CREATE TABLE dbo.Perfil (
-        IdPerfil INT IDENTITY(1,1) PRIMARY KEY,
-        Codigo   VARCHAR(20)  NOT NULL,
-        Nombre   VARCHAR(100) NOT NULL,
-        Valido   BIT          NOT NULL DEFAULT (1)--Columna Menos
+        IdPerfil          INT IDENTITY(1,1) PRIMARY KEY,
+        Codigo            VARCHAR(20)   NOT NULL,
+        Nombre            VARCHAR(100)  NOT NULL,
+        --IdUsuarioCreacion INT           NOT NULL DEFAULT (0),
+        ValorExtra     DATETIME      NOT NULL DEFAULT (SYSDATETIME())--
     );
 GO
