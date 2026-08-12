@@ -21,6 +21,6 @@ IF OBJECT_ID('dbo.Perfil', 'U') IS NULL
         Codigo            VARCHAR(20)   NOT NULL,
         Nombre            VARCHAR(100)  NOT NULL,
         --IdUsuarioCreacion INT           NOT NULL DEFAULT (0),
-        ValorExtra     DATETIME      NOT NULL DEFAULT (SYSDATETIME())--
+        ValorExtra     DATETIME      NOT NULL DEFAULT (SYSDATETIME())--Columna extra
     );
 GO
