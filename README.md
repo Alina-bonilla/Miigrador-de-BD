@@ -157,7 +157,11 @@ Import-DbaCsv `
 ```
 ---
 
+# ¿Cómo ejecutar un archivo .ps1?
 
+```powershell
+ & "C\...\Migrador Prueba de concepto\Fase1.ps1"
+```
 
 # Tecnologías utilizadas
 
