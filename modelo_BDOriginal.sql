@@ -5,8 +5,8 @@ GO
 USE BDOriginal;
 GO
 
-IF OBJECT_ID('dbo.usuarios', 'U') IS NULL
-    CREATE TABLE dbo.usuarios (
+IF OBJECT_ID('dbo.Usuario', 'U') IS NULL
+    CREATE TABLE dbo.Usuario (
         IdUsuario        INT IDENTITY(1,1) PRIMARY KEY,
         Cuenta           NVARCHAR(50)  NOT NULL,
         Nombre           NVARCHAR(100) NULL,
