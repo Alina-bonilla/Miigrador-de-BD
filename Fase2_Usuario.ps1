@@ -40,3 +40,5 @@ Invoke-DbaQuery `
     -Query "SELECT * FROM $SchemaDB.$TableDB ORDER BY IdUsuario" |
     Format-Table
 
+Write-Host "Migración completada correctamente." -ForegroundColor Green
+
