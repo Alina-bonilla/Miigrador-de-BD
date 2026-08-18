@@ -40,6 +40,8 @@ Copy-DbaDbTableData `
     -Database $nomDataBaseFinal `
     -Query "SELECT IdPerfil, Codigo, Nombre, ValorExtra FROM $SchemaDB.$TableDB ORDER BY IdPerfil" |
     Format-Table
+
+    Write-Host "Migración completada correctamente." -ForegroundColor Green
 }
 catch {
     throw "Migración cancelada. Detalle: $($_.Exception.Message)"
