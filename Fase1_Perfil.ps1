@@ -5,6 +5,9 @@ $SchemaDB = "dbo"
 $TableDB = "Perfil"
 
 # Se verifica la existencia del archivo CSV antes de continuar
+# Test-Path: comprueba si una ruta existe.
+# LiteralPath $csvPath: usa exactamente la ruta indicada, sin interpretar caracteres especiales como [ o *.
+# PathType Leaf: exige que la ruta sea un archivo, no una carpeta.
 if (-not (Test-Path -LiteralPath $csvPath -PathType Leaf)) {
     throw "No se encontró el archivo CSV: $csvPath"
 }
@@ -15,7 +18,10 @@ $serverConection = Connect-DbaInstance `
     -Database $nomDataBase `
     -TrustServerCertificate
 
-# 1. Obtener las columnas insertables de la tabla
+# 1. Obtener las columnas insertables de la tabla, excluye las columnas automaticas omo los id y las calculadas
+# El símbolo | es el pipeline de PowerShell. Envía el resultado de Invoke-DbaQuery al siguiente comando Select-Object
+# -ExpandProperty: Obtiene directamente la cadena con los nombres de las columnas
+# El @(...) garantiza que $columnasSql sea una colección incluso cuando SQL devuelve una sola columna
 $columnasSql = @(
     Invoke-DbaQuery `
         -SqlInstance $serverConection `
@@ -31,6 +37,7 @@ ORDER BY c.column_id;
 "@ |
     Select-Object -ExpandProperty Nombre
 )
+# -eq: operador “igual a”
 if ($columnasSql.Count -eq 0) {
     throw "No se encontró $TableDB o la tabla no tiene columnas insertables."
 }
@@ -39,6 +46,7 @@ Write-Host "Columnas esperadas por SQL Server:"
 $columnasSql | ForEach-Object { Write-Host "  - $_" }
 
 # 2. Leer los encabezados del CSV
+# -Encoding UTF8: Indica que PowerShell debe interpretar el archivo con codificación UTF-8 (tildes y caracteres especiales)
 $primerRegistro = Import-Csv `
     -Path $csvPath `
     -Delimiter "," `
@@ -49,7 +57,7 @@ if ($null -eq $primerRegistro) {
 }
 $columnasCsv = @(
     $primerRegistro.PSObject.Properties.Name |
-    ForEach-Object { $_.Trim() }
+    ForEach-Object { $_.Trim() } # recorre cada nombre de columna y elimina los espacios que pueda tener al inicio o al final
 )
 Write-Host "Columnas encontradas en el CSV:"
 $columnasCsv | ForEach-Object { Write-Host "  - $_" }
