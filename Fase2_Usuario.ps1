@@ -3,7 +3,6 @@ $nomDataBaseMig = "BDOriginal"
 $SchemaDB = "dbo"
 $TableDB = "Usuario"
 $nomDataBaseFinal = "BDFinal"
-$valorExtra = '2026-08-12 17:00:00' #Valor quemado para columna extra
 
 # 1. Se crea la conexión con los servidores usando autenticación de Windows
 $serverConectionOriginal = Connect-DbaInstance `
