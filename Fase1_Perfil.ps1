@@ -1,4 +1,4 @@
-$csvPath = "D:\FW.10.0 Pruebas\Migrador Prueba de concepto\perfiles_invalidos.csv"
+$csvPath = "D:\Pruebas\Migrador Prueba de concepto\perfiles_invalidos.csv"
 $sqlInstance = "srv-bd"
 $nomDataBase = "BDOriginal"
 $SchemaDB = "dbo"
