@@ -122,4 +122,22 @@ Parámetros del módulo dbatools utilizados para validar:
 
 Import-DbaCsv usa una transacción de forma predeterminada; si ocurre un error, revierte la importación completa. Pagina del módulo https://dbatools.io/Import-DbaCsv/
 
+### 3. No existe la tabla o no tiene columnas insertables.
+
+El resultado fue:
+- Para perfiles (se mantuvo la validación larga).
+<img width="1016" height="120" alt="image" src="https://github.com/user-attachments/assets/9a9d7eb0-f4ae-4fcb-8f1d-0e2ed41c1ee5" />
+
+- Para usuarios (sin validación larga)
+<img width="1362" height="113" alt="image" src="https://github.com/user-attachments/assets/a102aa95-0135-48e4-bdd4-dfe95d2fee13" />
+
+### 4. Archivo CSV vacío.
+<img width="1442" height="137" alt="image" src="https://github.com/user-attachments/assets/fcbd4783-b413-4446-a098-9a98d6b7cee3" />
+
+### 5. Si el archivo CSV solo tiene una ",".
+
+El resultado fue:
+- No se insertan datos
+<img width="906" height="507" alt="image" src="https://github.com/user-attachments/assets/9d184719-e699-41ec-94d1-4d8ffab8300d" />
+
 
